@@ -19,33 +19,7 @@
 - 检索`.vue`文件中是否存在`name`，若不存在且为`views/`下无文件夹包裹的单文件则取当前单文件的名称，否则取`views/`下的当前文件夹名称
 - 默认结构为每个路由访问的`.vue`文件都存放在一个文件夹内，命名为`index.vue`，`component`为`"@/views/" + 文件夹名称 + "index.vue"`，直接放在`views/`下单文件的`component`为`"@/views/" + 文件名称`
 - `gen-router.js`根据`views/`目录下的文件以及文件夹名称来自动获取路由信息并生成文件，目录结构如下：
-  vue-case  
-  ├─ public  
-  ├─ src  
-  │ ├─ assets  
-  │ ├─ components ····················全局组件
-  │ ├─ router  
-  │ │ └─ index.ts ····················`gen-router.js`生成的路由文件
-  │ ├─ stores  
-  │ ├─ views  
-  │ │ ├─ input  
-  │ │ │ ├─ components  
-  │ │ │ │ └─ myInput.vue  
-  │ │ │ └─ index.vue ·················`views/`下有文件夹包裹命名为`index.vue`
-  │ │ └─ test.vue ····················`views/`下无文件夹包裹的单文件
-  │ ├─ App.vue  
-  │ └─ main.ts  
-  ├─ README.md  
-  ├─ auto-imports.d.ts ···············`elementUI`自动导入
-  ├─ components.d.ts ·················`elementUI`自动导入
-  ├─ env.d.ts  
-  ├─ gen-router.js ···················自动生成路由文件
-  ├─ index.html  
-  ├─ package-lock.json  
-  ├─ package.json  
-  ├─ tsconfig.json  
-  ├─ tsconfig.node.json  
-  └─ vite.config.ts
+  ![avatar](/public/tree.png)
 
 ## Recommended IDE Setup
 
