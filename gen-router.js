@@ -1,16 +1,16 @@
-import { readdir, statSync, readFileSync, writeFile } from "fs";
+const fs = require("fs");
 
 const vueDir = "./src/views/";
 const defaultHomePath = "homeView";
 
-readdir(vueDir, function (err, files) {
+fs.readdir(vueDir, function (err, files) {
   if (err) {
     console.log(err);
     return;
   }
   let routers = ``;
   for (const filename of files) {
-    const stat = statSync(vueDir + filename);
+    const stat = fs.statSync(vueDir + filename);
     const is_direc = stat.isDirectory();
     let componentPath, routerName, routerPath;
     if (is_direc) {
@@ -23,7 +23,7 @@ readdir(vueDir, function (err, files) {
       }
       componentPath = "@/views/" + filename;
       routerPath = name;
-      const content = readFileSync(`${vueDir}${filename}`, "utf-8");
+      const content = fs.readFileSync(`${vueDir}${filename}`, "utf-8");
       var match = content.match(/name:\s*['"](.+)['"]/);
     }
     if (match) {
@@ -32,23 +32,25 @@ readdir(vueDir, function (err, files) {
       routerName = routerPath;
     }
 
-    routers += `{path: '/${
+    routers += `
+    {path: '/${
       routerPath === defaultHomePath ? "" : routerPath
-    }',name: '${routerName}', component: ()=> import(/* webpackChunkName: '${routerName}' */ '${componentPath}')},\n`;
+    }', name: '${routerName}', component: ()=> import(/* webpackChunkName: '${routerName}' */ '${componentPath}')},\n`;
   }
 
   const result = `// 该文件由gen-router.js自动生成，请勿手动修改
-    import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router';
 
-    const routers = [${routers}]
-    const router = createRouter({
-      history: createWebHistory(import.meta.env.BASE_URL),
-      routes: routers
-    })
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    ${routers}
+  ]
+});
 
-    export default router`;
+export default router;`;
 
-  writeFile("./src/router/index.ts", result, "utf-8", (err) => {
+  fs.writeFile("./src/router/index.ts", result, "utf-8", (err) => {
     if (err) throw err;
     // 如果没有错误
     console.log("./src/router/router.ts 生成成功！");
