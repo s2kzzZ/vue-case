@@ -1,57 +1,54 @@
-var fs = require("fs");
-// const readline = require("readline");
-const os = require("os");
+import { readdir, statSync, readFileSync, writeFile } from "fs";
 
 const vueDir = "./src/views/";
 const defaultHomePath = "homeView";
 
-fs.readdir(vueDir, function (err, files) {
+readdir(vueDir, function (err, files) {
   if (err) {
     console.log(err);
     return;
   }
   let routers = ``;
   for (const filename of files) {
-    const stat = fs.statSync(vueDir + filename);
+    const stat = statSync(vueDir + filename);
     const is_direc = stat.isDirectory();
-    let componentPath, routerName;
+    let componentPath, routerName, routerPath;
     if (is_direc) {
       componentPath = "@/views/" + filename + "/index.vue";
-      routerName = filename;
+      routerPath = filename;
     } else {
       var [name, ext] = filename.split(".");
       if (ext != "vue") {
         continue;
       }
       componentPath = "@/views/" + filename;
-      routerName = name;
-      const contentFull = fs.readFileSync(`${vueDir}${filename}`, "utf-8");
-      var match = /\<\!\-\-\s*(.*)\s*\-\-\>/g.exec(
-        contentFull.split(os.EOL)[0]
-      );
+      routerPath = name;
+      const content = readFileSync(`${vueDir}${filename}`, "utf-8");
+      var match = content.match(/name:\s*['"](.+)['"]/);
     }
     if (match) {
       routerName = match[1];
+    } else {
+      routerName = routerPath;
     }
 
     routers += `{path: '/${
-      routerName === defaultHomePath ? "" : routerName
+      routerPath === defaultHomePath ? "" : routerPath
     }',name: '${routerName}', component: ()=> import(/* webpackChunkName: '${routerName}' */ '${componentPath}')},\n`;
   }
 
   const result = `// 该文件由gen-router.js自动生成，请勿手动修改
     import { createRouter, createWebHistory } from 'vue-router'
 
+    const routers = [${routers}]
     const router = createRouter({
       history: createWebHistory(import.meta.env.BASE_URL),
-      routes: [
-        ${routers}
-      ]
+      routes: routers
     })
 
     export default router`;
 
-  fs.writeFile("./src/router/index.ts", result, "utf-8", (err) => {
+  writeFile("./src/router/index.ts", result, "utf-8", (err) => {
     if (err) throw err;
     // 如果没有错误
     console.log("./src/router/router.ts 生成成功！");
