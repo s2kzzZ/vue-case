@@ -29,7 +29,6 @@ onMounted(() => {
   for (const [key, value] of entries) {
     defineExposeObj[key] = value;
   }
-  // console.log(defineExposeObj);
 });
 defineExpose(defineExposeObj);
 </script>
