@@ -19,10 +19,13 @@ import { ref, onMounted, useAttrs, useSlots } from "vue";
 const attrs = useAttrs();
 const slots = useSlots();
 const inp = ref(null);
-const defineExposeObj: any = {}; // ref上的所有方法
+interface DefineExposeObj {
+  [key: string]: any;
+}
+const defineExposeObj: DefineExposeObj = {}; // ref上的所有方法
 onMounted(() => {
   // console.log("inp", inp.value);
-  const entries = Object.entries(inp.value as any);
+  const entries = Object.entries(inp);
   for (const [key, value] of entries) {
     defineExposeObj[key] = value;
   }
@@ -34,6 +37,7 @@ defineExpose(defineExposeObj);
 <style scoped lang="scss">
 .my-input {
   transition: 0.3s;
+
   &:hover,
   &:focus-within {
     filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.3));
