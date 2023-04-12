@@ -12,19 +12,19 @@ fs.readdir(vueDir, function (err, files) {
   for (const filename of files) {
     const stat = fs.statSync(vueDir + filename);
     const is_direc = stat.isDirectory();
-    let componentPath, routerName, routerPath;
+    let componentPath, routerName, routerPath, match;
     if (is_direc) {
       componentPath = "@/views/" + filename + "/index.vue";
       routerPath = filename;
     } else {
-      var [name, ext] = filename.split(".");
+      const [name, ext] = filename.split(".");
       if (ext != "vue") {
         continue;
       }
       componentPath = "@/views/" + filename;
       routerPath = name;
       const content = fs.readFileSync(`${vueDir}${filename}`, "utf-8");
-      var match = content.match(/name:\s*['"](.+)['"]/);
+      match = content.match(/name:\s*['"](.+)['"]/);
     }
     if (match) {
       routerName = match[1];
