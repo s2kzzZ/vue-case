@@ -7,11 +7,11 @@ const router = createRouter({
     
     {path: '/aboutView', name: 'aboutView', component: ()=> import(/* webpackChunkName: 'aboutView' */ '@/views/aboutView/index.vue')},
 
+    {path: '/bgAnimation', name: 'bgAnimation', component: ()=> import(/* webpackChunkName: 'bgAnimation' */ '@/views/bgAnimation/index.vue')},
+
     {path: '/', name: 'homeView', component: ()=> import(/* webpackChunkName: 'homeView' */ '@/views/homeView/index.vue')},
 
     {path: '/input', name: 'input', component: ()=> import(/* webpackChunkName: 'input' */ '@/views/input/index.vue')},
-
-    {path: '/test', name: 'abc', component: ()=> import(/* webpackChunkName: 'abc' */ '@/views/test.vue')},
 
   ]
 });
